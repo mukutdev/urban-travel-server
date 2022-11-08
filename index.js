@@ -37,6 +37,19 @@ async function run(){
             console.log(result);
         })
 
+        // get 3 trips information
+
+        app.get('/trips/upcoming' , async(req , res)=>{
+            
+            const limit = parseInt(req.query.limit)
+            const query = {}
+            const cursor = tripCollections.find(query)
+            const result = await cursor.limit(limit).toArray()
+            res.send(result)
+
+
+        })
+
         // get single trips details
 
         app.get('/trips/:id' , async(req , res)=>{
