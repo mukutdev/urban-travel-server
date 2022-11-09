@@ -76,6 +76,24 @@ async function run(){
 
         })
 
+        
+        //get trip review by specific trip name
+
+        app.get('/reviews' , async (req, res) => {
+            console.log(req.query.id);
+            let query = {}
+
+            if(req.query.id){
+                query = {
+                    id : req.query.id
+                }
+            }
+            const cursor = reviewCollections.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+
     }
     finally{
 
