@@ -39,6 +39,17 @@ async function run() {
       console.log(result);
     });
 
+    //post trips
+
+    app.post('/trips' , async (req, res)=>{
+
+      const trip = req.body
+      const result = await tripCollections.insertOne(trip)
+      res.send(result)
+      console.log(result);
+
+    })
+
     // get 3 trips information
 
     app.get("/trips/upcoming", async (req, res) => {
@@ -65,21 +76,7 @@ async function run() {
       const result = await reviewCollections.insertOne(review);
       res.send(result);
     });
-    //get trip review by specific email
-
-    app.get("/reviews", async (req, res) => {
-      console.log(req.query);
-      let query = {};
-
-      if(req.query.email){
-          query = {
-              email : req.query.email
-          }
-      }
-      const cursor = reviewCollections.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
+    
 
     //get trip review by specific trip name
 
@@ -96,6 +93,56 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+
+
+    //get trip review by specific email
+
+    app.get("/emailBase", async (req, res) => {
+        console.log(req.query);
+        let query = {};
+  
+        if (req.query.email) {
+          query = {
+            email: req.query.email,
+          };
+        }
+        const cursor = reviewCollections.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      });
+
+
+      app.get('/review/:id' , async (req, res,)=>{
+
+        const {id} = req.params
+        const result = await reviewCollections.findOne({_id : ObjectId(id)})    
+        res.send(result)
+    })
+
+      //delete trip review
+
+      app.delete('/emailBase/:id' , async (req, res) => {
+
+        const id = req.params.id
+        console.log(id);
+        const query ={_id : ObjectId(id)}
+        const result = await reviewCollections.deleteOne(query)
+        res.send(result)
+
+    })
+
+    //update trip review
+    app.patch('/emailBase/:id' , async (req, res) =>{
+
+        const {id} = req.params
+        const result = await reviewCollections.updateOne({_id : ObjectId(id)} , {$set : req.body})
+        res.send(result)
+
+    })
+
+
+
   } finally {
   }
 }
