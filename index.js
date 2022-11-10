@@ -3,6 +3,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 5000;
+var jwt = require('jsonwebtoken');
 require("dotenv").config();
 
 //middleware
@@ -18,6 +19,10 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+
+
+
+
 //crud function
 
 async function run() {
@@ -28,6 +33,19 @@ async function run() {
     const reviewCollections = client
       .db("travel-services")
       .collection("allReviews");
+
+
+    //jwt
+//       app.post('/jwt', (req ,res)=>{
+
+//   const user = req.body
+//   const token = jwt.sign(user , process.env.DB_ACCESS_TOKEN_SECRET , {expiresIn : '1d'})
+//   res.send({token : token})
+//   console.log(user);
+
+
+// })
+
 
     //get all trips
 
@@ -99,7 +117,16 @@ async function run() {
     //get trip review by specific email
 
     app.get("/emailBase", async (req, res) => {
-        console.log(req.query);
+       
+      //   const decoded = req.decoded
+      //   console.log(decoded);
+
+      //   if(decoded.email !== req.query.email){
+      //     return res.status(403).send({message : "unauthorized access"});
+      // }
+      // console.log('inside order api' , decoded);
+      // console.log(req.query);
+
         let query = {};
   
         if (req.query.email) {
@@ -113,8 +140,8 @@ async function run() {
       });
 
 
-      app.get('/review/:id' , async (req, res,)=>{
-
+      app.get('/emailBase/:id' , async (req, res,)=>{
+        
         const {id} = req.params
         const result = await reviewCollections.findOne({_id : ObjectId(id)})    
         res.send(result)
